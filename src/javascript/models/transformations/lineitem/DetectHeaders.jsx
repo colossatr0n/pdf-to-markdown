@@ -19,7 +19,7 @@ export default class DetectHeaders extends ToLineItemTransformation {
 
         // Handle title pages
         const pagesWithMaxHeight = findPagesWithMaxHeight(parseResult.pages, maxHeight);
-        const min2ndLevelHeaderHeigthOnMaxPage = mostUsedHeight + ((maxHeight - mostUsedHeight) / 4);
+        const min2ndLevelHeaderHeigthOnMaxPage = Math.ceil(mostUsedHeight + ((maxHeight - mostUsedHeight) / 4));
         pagesWithMaxHeight.forEach(titlePage => {
             titlePage.items.forEach(item => {
                 const height = item.height;
@@ -57,7 +57,8 @@ export default class DetectHeaders extends ToLineItemTransformation {
             var lastHeight;
             parseResult.pages.forEach(page => {
                 page.items.forEach(item => {
-                    if (!item.type && item.height > mostUsedHeight && !isListItem(item.text())) {
+                    // Floor the item height to account for small height difference errors, e.g. 13 vs 12.
+                    if (!item.type && Math.floor(item.height*.95) > mostUsedHeight && !isListItem(item.text())) {
                         if (!heights.includes(item.height) && (!lastHeight || lastHeight > item.height)) {
                             heights.push(item.height);
                         }

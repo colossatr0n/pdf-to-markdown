@@ -23,6 +23,7 @@ export default class AppState {
         this.mainView = View.UPLOAD;
         this.fileBuffer;
         this.metadata;
+        this.removePageNumbers;
         this.pages = [];
         this.transformations ;
 
@@ -31,10 +32,15 @@ export default class AppState {
         this.storeFileBuffer = this.storeFileBuffer.bind(this);
         this.storePdfPages = this.storePdfPages.bind(this);
         this.switchMainView = this.switchMainView.bind(this);
+        this.setRemovePageNumbersState = this.setRemovePageNumbersState.bind(this);
     }
 
     render() {
         this.renderFunction(this)
+    }
+
+    setRemovePageNumbersState(removePageNumbers) {
+        this.removePageNumbers = removePageNumbers
     }
 
     // the uploaded pdf as file buffer
@@ -53,7 +59,7 @@ export default class AppState {
         this.transformations = [
             new CalculateGlobalStats(fontMap),
             new CompactLines(),
-            new RemoveRepetitiveElements(),
+            new RemoveRepetitiveElements(this.removePageNumbers),
             new VerticalToHorizontal(),
             new DetectTOC(),
             new DetectHeaders(),

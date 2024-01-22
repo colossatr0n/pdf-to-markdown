@@ -14,6 +14,19 @@ export function minXFromBlocks(blocks:LineItemBlock[]) {
     return minX;
 }
 
+export function maxXFromBlocks(blocks:LineItemBlock[]) {
+    var maxX = 0;
+    blocks.forEach(block => {
+        block.items.forEach(item => {
+            maxX = Math.max(maxX, item.x)
+        });
+    });
+    if (maxX == 0) {
+        return null;
+    }
+    return maxX;
+}
+
 export function minXFromPageItems(items:PageItem) {
     var minX = 999;
     items.forEach(item => {

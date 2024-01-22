@@ -2,7 +2,7 @@ import ToLineItemTransformation from '../ToLineItemTransformation.jsx';
 import ParseResult from '../../ParseResult.jsx';
 import { REMOVED_ANNOTATION } from '../../Annotation.jsx';
 
-import { isDigit } from '../../../stringFunctions.jsx'
+import { isDigit, isNumber } from '../../../stringFunctions.jsx'
 
 
 function hashCodeIgnoringSpacesAndNumbers(string) {
@@ -22,8 +22,9 @@ function hashCodeIgnoringSpacesAndNumbers(string) {
 // Remove elements with similar content on same page positions, like page numbers, licenes information, etc...
 export default class RemoveRepetitiveElements extends ToLineItemTransformation {
 
-    constructor() {
+    constructor(removePageNumbers = false) {
         super("Remove Repetitive Elements");
+        this.removePageNumbers = removePageNumbers
     }
 
     // The idea is the following:
@@ -76,7 +77,13 @@ export default class RemoveRepetitiveElements extends ToLineItemTransformation {
         parseResult.pages.forEach((page, i) => {
             if (minLineHashRepetitions[pageStore[i].minLineHash] >= Math.max(3, parseResult.pages.length * 2 / 3)) {
                 pageStore[i].minElements.forEach(item => {
-                    item.annotation = REMOVED_ANNOTATION;
+                    const isPageNumber = isNumber(item.words[0].string.trim())
+                    if (!this.removePageNumbers && isPageNumber) {
+                        item.words[0].string = "---\n\n" + "_" + item.words[0].string.trim() + "_"
+                    } else {
+                        item.annotation = REMOVED_ANNOTATION;
+                    }
+
                 });
                 removedFooter++;
             }

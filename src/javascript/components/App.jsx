@@ -23,7 +23,7 @@ export default class App extends React.Component {
         var mainView;
         switch (this.props.appState.mainView) {
         case View.UPLOAD:
-            mainView = <UploadView uploadPdfFunction={ appState.storeFileBuffer } />
+            mainView = <UploadView uploadPdfFunction={ appState.storeFileBuffer } setRemovePageNumbersState={ appState.setRemovePageNumbersState } />
             break;
         case View.LOADING:
             mainView = <LoadingView fileBuffer={ appState.fileBuffer } storePdfPagesFunction={ appState.storePdfPages } />

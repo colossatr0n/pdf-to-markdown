@@ -64,6 +64,9 @@ function shouldFlushBlock(stashedBlock, item, minX, mostUsedDistance) {
     }
     if (item.type) {
         return !item.type.mergeToBlock;
+    } // if item has different indent
+    else if (lastItem.x < item.x){
+        return true
     } else {
         return hasBigDistance;
     }
@@ -74,12 +77,13 @@ function bigDistance(lastItem, item, minX, mostUsedDistance) {
     const distance = lastItem.y - item.y;
     if (distance < 0 - mostUsedDistance / 2) {
         //distance is negative - and not only a bit
+        //Footers are read before the rest of the page items, which is case when the distance will be negative
         return true;
     }
     var allowedDisctance = mostUsedDistance + 1;
     if (lastItem.x > minX && item.x > minX) {
         //intended elements like lists often have greater spacing
-        allowedDisctance = mostUsedDistance + mostUsedDistance / 2;
+        allowedDisctance = mostUsedDistance + mostUsedDistance / 2.2;
     }
     if (distance > allowedDisctance) {
         return true;

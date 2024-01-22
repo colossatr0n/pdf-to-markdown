@@ -61,13 +61,26 @@ BlockType.initEnum({
         mergeToBlock: true,
         mergeFollowingNonTypedItems: true,
         toText(block:LineItemBlock) {
-            return linesToText(block.items, false);
+            // return linesToText(block.items, false);
+            // const items = removeInterlinearNewlines(block.items)
+            // const items = block.items.map(item => removeInterlinearNewlines(linesToText([item])))
+            const text = linesToText(block.items, false).split("\n").map(item => item.startsWith("[^") ? "\n" + item : item).join(" ")
+            // return '```\n' + text + '\n```'
+            return text
         }
     },
     CODE: {
         mergeToBlock: true,
         toText(block:LineItemBlock) {
             return '```\n' + linesToText(block.items, true) + '```'
+        }
+    },
+    QUOTE: {
+        mergeToBlock: true,
+        toText(block:LineItemBlock) {
+            var text = linesToText(block.items, false)
+            return  "> " + removeInterlinearNewlines(text).split("\n").join("\n")
+            // return  '> ' + removeInterlinearNewlines(linesToText(block.items, false)).trimEnd()//.split("\n").map(item => item == "" ? item : item + "\n").join("").trimEnd()
         }
     },
     LIST: {
@@ -90,9 +103,14 @@ export function isHeadline(type: BlockType) {
 
 export function blockToText(block: LineItemBlock) {
     if (!block.type) {
-        return linesToText(block.items, false);
+        var text = linesToText(block.items, false)
+        return removeInterlinearNewlines(text)
     }
     return block.type.toText(block);
+}
+
+function removeInterlinearNewlines(text) {
+    return text.split("\n").map(item => item == "" ? "\n" : item).join(" ")
 }
 
 export function headlineByLevel(level) {

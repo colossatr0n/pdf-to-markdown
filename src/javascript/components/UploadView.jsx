@@ -15,7 +15,21 @@ export default class UploadView extends React.Component {
         super(props);
         this.state = {
             uploadPdfFunction: props.uploadPdfFunction,
+            setRemovePageNumbersState: props.setRemovePageNumbersState,
         };
+        this.onClick = this.onClick.bind(this)
+        this.shouldRemovePageNumbers = false
+
+    }
+
+    componentDidMount() {
+        this.state.setRemovePageNumbersState(this.shouldRemovePageNumbers)
+    }
+
+    onClick(e){
+      console.log(e.target.checked, e.target.id);
+      this.state.setRemovePageNumbersState(e.target.checked)
+      
     }
 
     onDrop(files) {
@@ -45,6 +59,18 @@ export default class UploadView extends React.Component {
                   <i>This tool converts a PDF file into a Markdown text format! Simply drag & drop your PDF file on the upload area and go from there. Don't expect wonders, there are a lot of variances in generated PDF's from different tools and different ages. No matter how good the parser works for your PDF, you will have to invest a good amount of manuell work to complete it. Though this tool aims to be general purpose, it has been tested on a certain set of PDF's only.</i>
                 </Alert>
               </Dropzone>
+              <div>
+                <input type="checkbox" 
+                       id="removePageNumbers" 
+                       name="removePageNumbers" 
+                       onChange={this.onClick}
+                       onLoad={this.componentDidMount}
+                       defaultChecked={this.shouldRemovePageNumbers}  
+                       className="checkbox" 
+                       >
+                </input>
+                <label htmlFor="removePageNumbers"> Remove Page Numbers</label>
+              </div>
               <br/>
               <br/>
               <br/>

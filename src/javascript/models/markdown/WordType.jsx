@@ -15,13 +15,13 @@ WordType.initEnum({
         attachWithoutWhitespace: true,
         plainTextFormat: true,
         toText(string) {
-            return `^${string}`
+            return `[^${string}]`
         // return `<sup>[${string}](#${string})</sup>`;
         }
     },
     FOOTNOTE: {
         toText(string) {
-            return `(^${string})`
+            return `[^${string}]:`
         }
     }
 });
